@@ -1,0 +1,27 @@
+name: Ejercicio 2 - Tests de Calculadora
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout del código
+      - name: Checkout código
+        uses: actions/checkout@v3
+      
+      # Step 2: Configurar Node.js versión 18
+      - name: Configurar Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      # Step 3: Ejecutar tests
+      - name: Ejecutar tests
+        run: npm test
