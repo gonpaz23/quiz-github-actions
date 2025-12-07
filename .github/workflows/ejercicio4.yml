@@ -1,0 +1,49 @@
+name: Ejercicio 4
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test-multi-os:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            runner-os: Linux
+          - os: windows-latest
+            runner-os: Windows
+          - os: macos-latest
+            runner-os: macOS
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      # Step 1: Checkout del código
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      # Step 2: Configurar Node.js versión 18
+      - name: Configurar Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      # Step 3: Instalar dependencias
+      - name: Instalar dependencias
+        run: npm ci
+      
+      # Step 4: Imprimir sistema operativo
+      - name: Imprimir sistema operativo
+        run: echo "Ejecutando en ${{ runner.os }} (${{ matrix.os }})"
+      
+      # Step 5: Ejecutar tests
+      - name: Ejecutar tests
+        run: npm test
+      
+      # Step 6: Step condicional solo para Linux/Ubuntu
+      - name: Solo en Linux
+        if: runner.os == 'Linux'
+        run: echo "Este step solo aparece en Linux"
