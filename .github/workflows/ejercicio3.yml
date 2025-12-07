@@ -7,69 +7,56 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job 1: Verificación de código
   lint:
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Checkout del código
       - name: Checkout código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # También actualizamos checkout a v4
       
-      # Step 2: Imprimir mensaje de verificación
       - name: Verificar código
         run: echo "Código verificado correctamente"
 
-  # Job 2: Ejecución de tests (depende de lint)
   test:
     needs: lint  # Depende del job lint
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Checkout del código
       - name: Checkout código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
-      # Step 2: Configurar Node.js versión 18
       - name: Configurar Node.js 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4  # Actualizamos a v4
         with:
           node-version: '18'
           cache: 'npm'
-      
-      # Step 3: Instalar dependencias
+
       - name: Instalar dependencias
         run: npm ci
       
-      # Step 4: Ejecutar tests
       - name: Ejecutar tests
         run: npm test
 
-  # Job 3: Build y creación de artifact (depende de test)
   build:
     needs: test  # Depende del job test
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Checkout del código
       - name: Checkout código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
-      # Step 2: Imprimir mensaje de build
       - name: Mensaje de build
         run: echo "Build completado exitosamente"
       
-      # Step 3: Crear archivo build-info.txt
       - name: Crear archivo build-info.txt
         run: |
           echo "Fecha del build: $(date)" > build-info.txt
           echo "Version: 1.0.0" >> build-info.txt
           echo "Build completado exitosamente" >> build-info.txt
           echo "Contenido del archivo:" && cat build-info.txt
-      
-      # Step 4: Subir artifact
+
       - name: Subir artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ¡Aquí está el cambio!
         with:
           name: build-artifact
           path: build-info.txt
